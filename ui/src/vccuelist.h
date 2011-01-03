@@ -44,6 +44,10 @@ class Chaser;
 #define KXMLQLCVCCueListNext "Next"
 #define KXMLQLCVCCueListPrevious "Previous"
 
+// TODO: Add "save scene" button to save a snapshot of the outputted dmx
+// as a scene. Should be available in operate mode.
+
+
 /**
  * VCCueList provides a \ref VirtualConsole widget to control cue lists.
  *
