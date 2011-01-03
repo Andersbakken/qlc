@@ -534,6 +534,22 @@ void VCSlider::slotFixtureRemoved(quint32 fxi_id)
     }
 }
 
+void VCSlider::slotCueListCurrentChanged()
+{
+    switch (m_levelChannels.size()) {
+    case 0:
+        break;
+    case 1:
+        // ### hvor finner jeg verdien?
+        slotInputValueChanged(m_inputUniverse, m_inputChannel, 42);
+        break;
+    default:
+        qWarning("Need to mark this slider as dirty");
+        break;
+    }
+}
+
+
 /*********************************************************************
  * DMXSource
  *********************************************************************/
