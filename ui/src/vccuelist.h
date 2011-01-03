@@ -172,6 +172,9 @@ public:
         return m_previousInputChannel;
     }
 
+signals:
+    void currentStepChanged(int);
+
 protected slots:
     void slotNextInputValueChanged(quint32 universe, quint32 channel, uchar value);
     void slotPreviousInputValueChanged(quint32 universe, quint32 channel, uchar value);

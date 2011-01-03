@@ -217,6 +217,7 @@ void VCCueList::slotCurrentStepChanged(int stepNumber)
     Q_ASSERT(item != NULL);
     m_list->scrollToItem(item, QAbstractItemView::PositionAtCenter);
     m_list->setCurrentItem(item);
+    emit currentStepChanged(stepNumber);
 }
 
 void VCCueList::slotItemActivated(QTreeWidgetItem* item)
