@@ -28,6 +28,25 @@
 #define KXMLQLCGMChannelModeAllChannels "All"
 #define KXMLQLCGMChannelModeIntensity "Intensity"
 
+class UniverseArrayValueChangedScope
+{
+public:
+    UniverseArrayValueChangedScope(int address, UniverseArray *array)
+        : m_address(address), m_array(array), m_old(uchar(array->preGMValues().at(address)))
+    {}
+    ~UniverseArrayValueChangedScope()
+    {
+        const uchar value = uchar(m_array->preGMValues().at(m_address));
+        if (value != m_old)
+            m_array->emit valueChanged(m_address, value);
+    }
+private:
+    const int m_address;
+    UniverseArray *m_array;
+    const uchar m_old;
+};
+
+
 /****************************************************************************
  * Initialization
  ****************************************************************************/
@@ -60,12 +79,14 @@ void UniverseArray::reset()
     m_postGMValues->fill(0);
     m_gMIntensityChannels.clear();
     m_gMNonIntensityChannels.clear();
+    emit valuesReset();
 }
 
 void UniverseArray::reset(int address, int range)
 {
     for (int i = address; i < address + range && i < size(); i++)
     {
+        UniverseArrayValueChangedScope scope(address, this);
         m_preGMValues->data()[i] = 0;
         m_postGMValues->data()[i] = 0;
         m_gMIntensityChannels.remove(i);
@@ -83,6 +104,7 @@ void UniverseArray::zeroIntensityChannels()
     while (it.hasNext() == true)
     {
         int channel(it.next());
+        UniverseArrayValueChangedScope scope(channel, this);
         m_preGMValues->data()[channel] = 0;
         m_postGMValues->data()[channel] = 0;
     }
@@ -270,9 +292,9 @@ bool UniverseArray::write(int channel, uchar value, QLCChannel::Group group)
     if (checkHTP(channel, value, group) == false)
         return false;
 
-    m_preGMValues->data()[channel] = char(value);
+    UniverseArrayValueChangedScope scope(channel, this);
     value = applyGM(channel, value, group);
     m_postGMValues->data()[channel] = char(value);
-
     return true;
 }
+

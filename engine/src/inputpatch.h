@@ -98,7 +98,8 @@ public:
 
     /** Check if feedback data should be sent back to the plugin */
     bool feedbackEnabled() const;
-
+public slots:
+    void onValueChanged(quint32 input, quint32 channel, uchar value);
 protected:
     QLCInPlugin* m_plugin;
     quint32 m_input;

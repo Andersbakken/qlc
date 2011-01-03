@@ -59,6 +59,7 @@ const QSize VCSlider::defaultSize(QSize(60, 200));
 
 VCSlider::VCSlider(QWidget* parent) : VCWidget(parent)
 {
+    qDebug() << "new VCSlider" << parent;
     /* Set the class name "VCSlider" as the object name as well */
     setObjectName(VCSlider::staticMetaObject.className());
 

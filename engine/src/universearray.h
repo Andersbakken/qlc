@@ -27,8 +27,10 @@
 
 #include "qlcchannel.h"
 
-class UniverseArray
+class UniverseArrayValueChangedScope;
+class UniverseArray : public QObject
 {
+    Q_OBJECT
 public:
     /** Construct a new UniverseArray of given size */
     UniverseArray(int size);
@@ -52,6 +54,9 @@ public:
      */
     void reset(int address, int range);
 
+signals:
+    void valuesReset();
+    void valueChanged(int address, uchar value);
 protected:
     const int m_size;
 
@@ -169,8 +174,8 @@ protected:
      * @return Value filtered through grand master (if applicable)
      */
     uchar applyGM(int channel, uchar value, QLCChannel::Group group);
-
 protected:
+    friend class UniverseArrayValueChangedScope;
     GMValueMode m_gMValueMode;
     GMChannelMode m_gMChannelMode;
     uchar m_gMValue;
@@ -179,6 +184,7 @@ protected:
     QSet <int> m_gMNonIntensityChannels;
     QByteArray* m_preGMValues;
     QByteArray* m_postGMValues;
+    QHash<int, QSet<QPair<QObject*, const char *> > > m_monitors;
 
     /************************************************************************
      * Writing
@@ -196,5 +202,6 @@ public:
     bool write(int channel, uchar value,
                QLCChannel::Group group = QLCChannel::NoGroup);
 };
+
 
 #endif

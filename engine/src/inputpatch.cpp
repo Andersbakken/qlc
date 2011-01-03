@@ -60,6 +60,11 @@ void InputPatch::set(QLCInPlugin* plugin, quint32 input, bool enableFeedback,
         m_plugin->close(m_input);
 
     m_plugin = plugin;
+    if (plugin) {
+        printf("%s %d: connect(plugin, SIGNAL(valueChanged(quint32,quint32,uchar)),\n", __FILE__, __LINE__);
+        connect(plugin, SIGNAL(valueChanged(quint32,quint32,uchar)),
+                this, SLOT(onValueChanged(quint32,quint32,uchar)));
+    }
     m_input = input;
     m_profile = profile;
     m_feedbackEnabled = enableFeedback;
@@ -117,3 +122,7 @@ bool InputPatch::feedbackEnabled() const
     return m_feedbackEnabled;
 }
 
+void InputPatch::onValueChanged(quint32 input, quint32 channel, uchar value)
+{
+    qDebug() << "onValueChanged" << input << channel << value;
+}
